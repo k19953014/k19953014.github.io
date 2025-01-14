@@ -17,7 +17,7 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-    console.log('Received background message ', payload);
+    console.log('Received background message by onBackgroundMessage', payload);
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
         body: payload.notification.body,
@@ -26,3 +26,25 @@ messaging.onBackgroundMessage((payload) => {
 
     self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+messaging.onMessage((payload) => {
+    console.log('Message received in foreground:', payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: '/firebase-logo.png'
+    };
+
+    new Notification(notificationTitle, notificationOptions);
+});
+
+self.addEventListener('push', (event) => {
+    console.log('Received background message by addEventListener', event);
+    const notificationTitle = event.notification.title;
+    const notificationOptions = {
+        body: event.notification.body,
+        icon: '/icon.png'
+    };
+
+    return self.registration.showNotification(notificationTitle, notificationOptions);
+  })
