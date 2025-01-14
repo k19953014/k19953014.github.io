@@ -16,35 +16,45 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-    console.log('Received background message by onBackgroundMessage', payload);
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: '/icon.png'
-    };
+// messaging.onBackgroundMessage((payload) => {
+//     console.log('Received background message by onBackgroundMessage', payload);
+//     const notificationTitle = payload.notification.title;
+//     const notificationOptions = {
+//         body: payload.notification.body,
+//         icon: '/icon.png'
+//     };
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
-});
+//     self.registration.showNotification(notificationTitle, notificationOptions);
+// });
 
-messaging.onMessage((payload) => {
-    console.log('Message received in foreground:', payload);
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: '/firebase-logo.png'
-    };
+// messaging.onMessage((payload) => {
+//     console.log('Message received in foreground:', payload);
+//     const notificationTitle = payload.notification.title;
+//     const notificationOptions = {
+//         body: payload.notification.body,
+//         icon: '/firebase-logo.png'
+//     };
 
-    new Notification(notificationTitle, notificationOptions);
-});
+//     new Notification(notificationTitle, notificationOptions);
+// });
 
 self.addEventListener('push', (event) => {
     console.log('Received background message by addEventListener', event);
-    const notificationTitle = event.notification.title;
-    const notificationOptions = {
-        body: event.notification.body,
-        icon: '/icon.png'
-    };
+    if (event.data) {
+        const payload = event.data.json(); // 获取消息的 JSON 数据
+        console.log('Push data payload:', payload);
 
-    return self.registration.showNotification(notificationTitle, notificationOptions);
+        // 自定义通知标题和选项
+        const notificationTitle = payload.notification?.title || 'Default Title';
+        const notificationOptions = {
+            body: payload.notification?.body || 'Default body content.',
+            icon: payload.notification?.icon || '/default-icon.png',
+            data: payload.data || {}, // 附加数据
+        };
+
+        // 显示通知
+        self.registration.showNotification(notificationTitle, notificationOptions);
+    } else {
+        console.error('Push event but no data.');
+    }
   })
