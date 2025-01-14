@@ -42,10 +42,14 @@ self.addEventListener('push', (event) => {
     console.log('Received background message by addEventListener', event);
     if (event.data) {
         const payload = event.data.json(); // 获取消息的 JSON 数据
-        console.log('Push data payload:', payload);
 
         // 自定义通知标题和选项
         const notificationTitle = payload.notification?.title || 'Default Title';
+
+        if (notificationTitle == "iostest") {
+            return;
+        }
+        
         const notificationOptions = {
             body: payload.notification?.body || 'Default body content.',
             icon: payload.notification?.icon || '/default-icon.png',
@@ -53,12 +57,7 @@ self.addEventListener('push', (event) => {
         };
 
         // 显示通知
-
-        // 避免重复显示
-        if (self.lastNotificationId !== payload.notification.title) {
-            self.lastNotificationId = payload.notification.title;
-            self.registration.showNotification(notificationTitle, notificationOptions);
-        }
+        self.registration.showNotification(notificationTitle, notificationOptions);
     } else {
         console.error('Push event but no data.');
     }
