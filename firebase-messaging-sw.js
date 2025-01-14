@@ -53,7 +53,12 @@ self.addEventListener('push', (event) => {
         };
 
         // 显示通知
-        self.registration.showNotification(notificationTitle, notificationOptions);
+
+        // 避免重复显示
+        if (self.lastNotificationId !== payload.notification.title) {
+            self.lastNotificationId = payload.notification.title;
+            self.registration.showNotification(notificationTitle, notificationOptions);
+        }
     } else {
         console.error('Push event but no data.');
     }
