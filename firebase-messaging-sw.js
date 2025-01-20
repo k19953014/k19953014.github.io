@@ -16,43 +16,17 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
-// messaging.onBackgroundMessage((payload) => {
-//     console.log('Received background message by onBackgroundMessage', payload);
-//     const notificationTitle = payload.notification.title;
-//     const notificationOptions = {
-//         body: payload.notification.body,
-//         icon: '/icon.png'
-//     };
-
-//     self.registration.showNotification(notificationTitle, notificationOptions);
-// });
-
-// messaging.onMessage((payload) => {
-//     console.log('Message received in foreground:', payload);
-//     const notificationTitle = payload.notification.title;
-//     const notificationOptions = {
-//         body: payload.notification.body,
-//         icon: '/firebase-logo.png'
-//     };
-
-//     new Notification(notificationTitle, notificationOptions);
-// });
-
 function detectDeviceInfo() {
     const userAgent = navigator.userAgent.toLowerCase();
-    const platform = navigator.platform.toLowerCase();
-    const width = window.screen.width;
-    const height = window.screen.height;
-    const pixelRatio = window.devicePixelRatio;
   
     let deviceType = '';
     if (/iphone|ipad|ipod/.test(userAgent)) {
       deviceType = 'iOS';
     } else if (/android/.test(userAgent)) {
       deviceType = 'Android';
-    } else if (/win/.test(platform)) {
+    } else if (/win/.test(userAgent)) {
       deviceType = 'Windows PC';
-    } else if (/mac/.test(platform)) {
+    } else if (/mac/.test(userAgent) && !/like mac os x/.test(userAgent)) {
       deviceType = 'Mac';
     } else {
       deviceType = 'Unknown Device';
@@ -60,8 +34,6 @@ function detectDeviceInfo() {
   
     return {
       deviceType,
-      screenSize: `${width}x${height}`,
-      pixelRatio,
       userAgent,
     };
   }
@@ -71,11 +43,9 @@ self.addEventListener('push', (event) => {
     if (event.data) {
         const payload = event.data.json(); // 获取消息的 JSON 数据
 
-        // 自定义通知标题和选项
         const notificationTitle = payload.notification?.title || 'Default Title';
 
         var deviceInfo = detectDeviceInfo();
-        
         if (deviceInfo.deviceType == "iOS" || deviceInfo.deviceType == "Mac") {
             return;
         }
@@ -86,8 +56,7 @@ self.addEventListener('push', (event) => {
             data: payload.data || {}, // 附加数据
         };
 
-        // 显示通知
-        self.registration.showNotification(notificationTitle + " Device:" + deviceInfo.deviceType, notificationOptions);
+        self.registration.showNotification(notificationTitle, notificationOptions);
     } else {
         console.error('Push event but no data.');
     }
