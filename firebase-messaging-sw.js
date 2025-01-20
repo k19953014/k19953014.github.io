@@ -38,6 +38,34 @@ const messaging = firebase.messaging();
 //     new Notification(notificationTitle, notificationOptions);
 // });
 
+function detectDeviceInfo() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const platform = navigator.platform.toLowerCase();
+    const width = window.screen.width;
+    const height = window.screen.height;
+    const pixelRatio = window.devicePixelRatio;
+  
+    let deviceType = '';
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      deviceType = 'iOS';
+    } else if (/android/.test(userAgent)) {
+      deviceType = 'Android';
+    } else if (/win/.test(platform)) {
+      deviceType = 'Windows PC';
+    } else if (/mac/.test(platform)) {
+      deviceType = 'Mac';
+    } else {
+      deviceType = 'Unknown Device';
+    }
+  
+    return {
+      deviceType,
+      screenSize: `${width}x${height}`,
+      pixelRatio,
+      userAgent,
+    };
+  }
+
 self.addEventListener('push', (event) => {
     console.log('Received background message by addEventListener', event);
     if (event.data) {
@@ -46,10 +74,12 @@ self.addEventListener('push', (event) => {
         // 自定义通知标题和选项
         const notificationTitle = payload.notification?.title || 'Default Title';
 
-        if (notificationTitle == "iostest") {
+        var deviceInfo = detectDeviceInfo();
+        
+        if (deviceInfo.deviceType == "iOS" || deviceInfo.deviceType == "Mac") {
             return;
         }
-        
+
         const notificationOptions = {
             body: payload.notification?.body || 'Default body content.',
             icon: payload.notification?.icon || '/default-icon.png',
@@ -57,7 +87,7 @@ self.addEventListener('push', (event) => {
         };
 
         // 显示通知
-        self.registration.showNotification(notificationTitle, notificationOptions);
+        self.registration.showNotification(notificationTitle + " Device:" + deviceInfo.deviceType, notificationOptions);
     } else {
         console.error('Push event but no data.');
     }
