@@ -36,7 +36,7 @@ function detectDeviceInfo() {
       deviceType,
       userAgent,
     };
-  }
+}
 
 self.addEventListener('push', (event) => {
     console.log('Received background message by addEventListener', event);
@@ -53,11 +53,20 @@ self.addEventListener('push', (event) => {
         const notificationOptions = {
             body: payload.notification?.body || 'Default body content.',
             icon: payload.notification?.icon || '/default-icon.png',
-            data: payload.data || {}, // 附加数据
+            data: payload.data || {}
         };
 
         self.registration.showNotification(notificationTitle, notificationOptions);
     } else {
         console.error('Push event but no data.');
     }
-  })
+});
+
+self.addEventListener("notificationclick", (event) => {
+    event.notification.close();
+    const url = event.notification.data.url;
+    if (url) {
+        clients.openWindow(url);
+    }
+});
+
