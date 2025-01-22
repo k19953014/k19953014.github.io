@@ -41,18 +41,18 @@ function detectDeviceInfo() {
 self.addEventListener('push', (event) => {
     console.log('Received background message by addEventListener', event);
     if (event.data) {
-        const payload = event.data.json(); // 获取消息的 JSON 数据
+        const payload = event.data.json();
 
-        const notificationTitle = payload.notification?.title || 'Default Title';
+        const notificationTitle = payload.data?.title || 'Default Title';
 
-        var deviceInfo = detectDeviceInfo();
-        if (deviceInfo.deviceType == "iOS" || deviceInfo.deviceType == "Mac") {
-            return;
-        }
+        // var deviceInfo = detectDeviceInfo();
+        // if (deviceInfo.deviceType == "iOS" || deviceInfo.deviceType == "Mac") {
+        //     return;
+        // }
 
         const notificationOptions = {
-            body: payload.notification?.body || 'Default body content.',
-            icon: payload.notification?.icon || '/default-icon.png',
+            body: payload.data?.body || 'Default body content.',
+            icon: payload.data?.icon || '/default-icon.png',
             data: payload.data || {}
         };
 
