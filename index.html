@@ -45,10 +45,10 @@
         }
         //firebase-messaging-sw.js 為可以離線傳通知需要的js檔
 
-        navigator.serviceWorker.addEventListener('message', function handler(event) {
-            console.log('Received a message from service worker: ', event.data.oriMessage);
-            document.getElementById("messageContainer").textContent = payload.notification.oriMessage;
-        });
+        // navigator.serviceWorker.addEventListener('message', function handler(event) {
+        //     console.log('Received a message from service worker: ', event.data.oriMessage);
+        //     document.getElementById("messageContainer").textContent = payload.notification.oriMessage;
+        // });
 
         // 前台處理 FCM 訊息
         messaging.onMessage((payload) => {
@@ -58,7 +58,7 @@
             // sessionStorage.setItem("notificationMessage", payload.notification.oriMessage);
             
             // 更新畫面
-            document.getElementById("messageContainer").textContent = payload.notification.oriMessage;
+            document.getElementById("messageContainer").textContent = payload.data.oriMessage;
         });
 
         //確認權限
