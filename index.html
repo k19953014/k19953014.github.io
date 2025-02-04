@@ -12,7 +12,7 @@
         Request Permission
     </button>
 
-    <div id="messageContainer">尚無通知</div>
+    <div id="messageContainer"></div>
 
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore-compat.js"></script>
@@ -54,7 +54,7 @@
         messaging.onMessage((payload) => {
             console.log("收到前台通知：", payload);
             
-            localStorage.setItem("notificationMessage", event.data.message);
+            localStorage.setItem("notificationMessage", payload.data.oriMessage);
 
             // 更新畫面
             document.getElementById("messageContainer").textContent = payload.data.oriMessage;
