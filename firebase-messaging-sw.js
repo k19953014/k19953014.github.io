@@ -58,15 +58,15 @@ self.addEventListener('push', (event) => {
         self.registration.showNotification(notificationTitle, notificationOptions);
 
 
-        document.getElementById("messageContainer").textContent = data.oriMessage;
-        // // 傳遞通知內容到 PWA 前端
-        // event.waitUntil(
-        //   self.clients.matchAll().then((clients) => {
-        //       clients.forEach((client) => {
-        //           client.postMessage({ message: data.oriMessage });
-        //       });
-        //   })
-        // );
+        // document.getElementById("messageContainer").textContent = data.oriMessage;
+        // 傳遞通知內容到 PWA 前端
+
+        self.clients.matchAll().then((clients) => {
+            clients.forEach((client) => {
+                client.postMessage({ message: data.oriMessage });
+            });
+        })
+
 
     } else {
         console.error('Push event but no data.');
