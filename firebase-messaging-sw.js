@@ -43,20 +43,29 @@ self.addEventListener('push', (event) => {
     if (event.data) {
         const payload = event.data.json();
 
-        const notificationTitle = payload.data?.title || 'Default Title';
-
-        // var deviceInfo = detectDeviceInfo();
-        // if (deviceInfo.deviceType == "iOS" || deviceInfo.deviceType == "Mac") {
-        //     return;
-        // }
+        const pushData = payload.data;
+        if (!pushData) {
+            return;
+        }
+        const notificationTitle = pushData.title;
 
         const notificationOptions = {
-            body: payload.data?.body || 'Default body content.',
-            icon: payload.data?.icon || '/default-icon.png',
+            body: pushData.body || 'Default body content.',
+            icon: pushData.icon || '/default-icon.png',
             data: payload.data || {}
         };
 
         self.registration.showNotification(notificationTitle, notificationOptions);
+
+        // 傳遞通知內容到 PWA 前端
+        event.waitUntil(
+          self.clients.matchAll().then((clients) => {
+              clients.forEach((client) => {
+                  client.postMessage({ message: data.oriMessage });
+              });
+          })
+        );
+
     } else {
         console.error('Push event but no data.');
     }
@@ -65,8 +74,28 @@ self.addEventListener('push', (event) => {
 self.addEventListener("notificationclick", (event) => {
     event.notification.close();
     const url = event.notification.data.url;
+    const action = event.notification.data.action
+
+
     if (url) {
-        clients.openWindow(url);
+      clients.openWindow(url); 
     }
+
+
+  //   if (action == "ShowToDoNotificationCard" & url) {
+  //       clients.openWindow(url); 
+  //       return;
+  //   }
+  //   event.waitUntil(
+  //     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+  //         if (clientList.length > 0) {
+  //             // 如果 PWA 已開啟，切換到現有分頁
+  //             clientList[0].focus();
+  //         } else {
+  //             // 否則開啟新的 PWA 分頁
+  //             self.clients.openWindow(event.notification.data.url);
+  //         }
+  //     })
+  // );
 });
 

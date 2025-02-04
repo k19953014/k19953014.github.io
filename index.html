@@ -12,6 +12,8 @@
         Request Permission
     </button>
 
+    <div id="messageContainer">尚無通知</div>
+
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-check-compat.js"></script>
@@ -42,6 +44,17 @@
                 .catch(err => { alert(err); console.log('Error!', err) });
         }
         //firebase-messaging-sw.js 為可以離線傳通知需要的js檔
+
+        // 前台處理 FCM 訊息
+        messaging.onMessage((payload) => {
+            console.log("收到前台通知：", payload);
+            
+            // 存入 SessionStorage
+            // sessionStorage.setItem("notificationMessage", payload.notification.oriMessage);
+            
+            // 更新畫面
+            document.getElementById("messageContainer").textContent = payload.notification.oriMessage;
+        });
 
         //確認權限
         function requestPermission() {
