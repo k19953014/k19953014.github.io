@@ -45,16 +45,16 @@
         }
         //firebase-messaging-sw.js 為可以離線傳通知需要的js檔
 
-        // 前台處理 FCM 訊息
-        messaging.onMessage((payload) => {
-            console.log("收到前台通知：", payload);
+        // // 前台處理 FCM 訊息
+        // messaging.onMessage((payload) => {
+        //     console.log("收到前台通知：", payload);
             
-            // 存入 SessionStorage
-            // sessionStorage.setItem("notificationMessage", payload.notification.oriMessage);
+        //     // 存入 SessionStorage
+        //     // sessionStorage.setItem("notificationMessage", payload.notification.oriMessage);
             
-            // 更新畫面
-            document.getElementById("messageContainer").textContent = payload.notification.oriMessage;
-        });
+        //     // 更新畫面
+        //     document.getElementById("messageContainer").textContent = payload.notification.oriMessage;
+        // });
 
         //確認權限
         function requestPermission() {
