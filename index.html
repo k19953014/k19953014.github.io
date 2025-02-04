@@ -54,18 +54,25 @@
         messaging.onMessage((payload) => {
             console.log("收到前台通知：", payload);
             
-            localStorage.setItem("notificationMessage", payload.data.oriMessage);
+            // 存入 Cache Storage
+            caches.open('fcm-messages').then((cache) => {
+            cache.put('lastMessage', new Response(payload.data.oriMessage));
+            });
+            // localStorage.setItem("notificationMessage", payload.data.oriMessage);
 
             // 更新畫面
-            document.getElementById("messageContainer").textContent = payload.data.oriMessage;
+            // document.getElementById("messageContainer").textContent = payload.data.oriMessage;
         });
 
         window.addEventListener("load", () => {
-            const savedMessage = localStorage.getItem("notificationMessage");
-            if (savedMessage) {
-                document.getElementById("messageContainer").textContent = savedMessage;
+            const cache = caches.open('fcm-messages');
+            const response = cache.match('lastMessage');
+            if (response) {
+                const text = response.text(); // 讀取純文字
+                document.getElementById('messageContainer').textContent = text;
+            } else {
+                document.getElementById('messageContainer').textContent = "目前沒有新通知";
             }
-            // localStorage.removeItem("notificationMessage");
         });
 
         //確認權限

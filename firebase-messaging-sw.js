@@ -57,7 +57,7 @@ self.addEventListener('push', (event) => {
 
         self.registration.showNotification(notificationTitle, notificationOptions);
 
-        console.log('data', pushData.oriMessage);
+
 
         self.registration.active.postMessage({ message: pushData.oriMessage })
 
