@@ -76,8 +76,6 @@
                 } else {
                     return "";
                 }
-            }).then(function (text) {
-                document.getElementById('messageContainer').textContent = text;
             }).catch(function (error) {
                 document.getElementById('messageContainer').textContent = "";
                 console.error("讀取 Cache Storage 發生錯誤:", error);
