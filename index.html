@@ -57,11 +57,8 @@
             // 存入 Cache Storage
             caches.open('fcm-messages').then((cache) => {
                 cache.put('lastMessage', new Response(payload.data.oriMessage));
+                document.getElementById("messageContainer").textContent = payload.data.oriMessage;
             });
-            // localStorage.setItem("notificationMessage", payload.data.oriMessage);
-
-            // 更新畫面
-            // document.getElementById("messageContainer").textContent = payload.data.oriMessage;
         });
 
         window.addEventListener("load", () => {
@@ -71,13 +68,19 @@
                 if (response) {
                     return response.text();
                 } else {
-                    return "目前沒有新通知";
+                    return "";
                 }
             }).then(function (text) {
                 document.getElementById('messageContainer').textContent = text;
+                cache.delete('lastMessage').then(function (success) {
+                    if (success) {
+                        console.log("成功刪除 lastMessage");
+                    } else {
+                        console.log("不存在或刪除失敗");
+                    }
+                });
             }).catch(function (error) {
                 console.error("讀取 Cache Storage 發生錯誤:", error);
-                document.getElementById('messageContainer').textContent = "載入通知時發生錯誤";
             });
         });
 
