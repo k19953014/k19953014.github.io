@@ -66,13 +66,18 @@
                 return cacheStorage.match('lastMessage');
             }).then(function (response) {
                 if (response) {
-                    return response.text();
+                    return response.text().then(text => {
+                        document.getElementById('messageContainer').textContent = text;
+                        // 清除 Cache，避免下次載入時還看到舊訊息
+                        caches.open('fcm-messages').then(cache => {
+                            cache.delete('lastMessage');
+                        });
+                    });
                 } else {
                     return "";
                 }
             }).then(function (text) {
                 document.getElementById('messageContainer').textContent = text;
-                cache.put('lastMessage', new Response(""));
             }).catch(function (error) {
                 document.getElementById('messageContainer').textContent = "";
                 console.error("讀取 Cache Storage 發生錯誤:", error);
