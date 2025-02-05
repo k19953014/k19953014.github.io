@@ -72,13 +72,7 @@
                 }
             }).then(function (text) {
                 document.getElementById('messageContainer').textContent = text;
-                cache.delete('lastMessage').then(function (success) {
-                    if (success) {
-                        console.log("成功刪除 lastMessage");
-                    } else {
-                        console.log("不存在或刪除失敗");
-                    }
-                });
+                cache.put('lastMessage', new Response(""));
             }).catch(function (error) {
                 console.error("讀取 Cache Storage 發生錯誤:", error);
             });
