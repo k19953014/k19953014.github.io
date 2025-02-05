@@ -74,6 +74,7 @@
                 document.getElementById('messageContainer').textContent = text;
                 cache.put('lastMessage', new Response(""));
             }).catch(function (error) {
+                document.getElementById('messageContainer').textContent = "";
                 console.error("讀取 Cache Storage 發生錯誤:", error);
             });
         });
