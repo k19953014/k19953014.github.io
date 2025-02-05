@@ -79,30 +79,31 @@ self.addEventListener('push', (event) => {
 self.addEventListener("notificationclick", (event) => {
     event.notification.close();
     const url = event.notification.data.url;
-    const action = event.notification.data.action
+    const action = event.notification.data.action;
+    const msg = event.notification.data.oriMessage;
+    const messageText = encodeURIComponent(msg);
+
+    if (url) {
+      clients.openWindow(url+'?msg='+messageText);
+    }
 
 
-    // if (url) {
-    //   clients.openWindow(url); 
-    // }
+    // event.waitUntil(
+    //   clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+    //       if (clientList.length > 0) {
+    //           // 如果網頁已開啟，直接傳送訊息給網頁
+    //           clientList[0].postMessage({ action: "showMessage", message: msg });
+    //       } else {
+    //           // 如果網頁未開啟，先存入 Cache Storage
+    //           caches.open('fcm-messages').then(cache => {
+    //               cache.put('lastMessage', new Response(msg));
+    //           });
 
-
-    event.waitUntil(
-      clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-          if (clientList.length > 0) {
-              // 如果網頁已開啟，直接傳送訊息給網頁
-              clientList[0].postMessage({ action: "showMessage", message: event.notification.data.oriMessage });
-          } else {
-              // 如果網頁未開啟，先存入 Cache Storage
-              caches.open('fcm-messages').then(cache => {
-                  cache.put('lastMessage', new Response(event.notification.data.oriMessage));
-              });
-
-              // 開啟頁面
-              clients.openWindow(url);
-          }
-      })
-    );
+    //           // 開啟頁面
+    //           clients.openWindow(url+'?msg='+messageText);
+    //       }
+    //   })
+    // );
 
   //   if (action == "ShowToDoNotificationCard" & url) {
   //       clients.openWindow(url); 
