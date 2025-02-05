@@ -56,7 +56,7 @@
             
             // 存入 Cache Storage
             caches.open('fcm-messages').then((cache) => {
-            cache.put('lastMessage', new Response(payload.data.oriMessage));
+                cache.put('lastMessage', new Response(payload.data.oriMessage));
             });
             // localStorage.setItem("notificationMessage", payload.data.oriMessage);
 
@@ -65,14 +65,20 @@
         });
 
         window.addEventListener("load", () => {
-            const cache = caches.open('fcm-messages');
-            const response = cache.match('lastMessage');
-            if (response) {
-                const text = response.text(); // 讀取純文字
+            caches.open('fcm-messages').then(function (cacheStorage) {
+                return cacheStorage.match('lastMessage');
+            }).then(function (response) {
+                if (response) {
+                    return response.text();
+                } else {
+                    return "目前沒有新通知";
+                }
+            }).then(function (text) {
                 document.getElementById('messageContainer').textContent = text;
-            } else {
-                document.getElementById('messageContainer').textContent = "目前沒有新通知";
-            }
+            }).catch(function (error) {
+                console.error("讀取 Cache Storage 發生錯誤:", error);
+                document.getElementById('messageContainer').textContent = "載入通知時發生錯誤";
+            });
         });
 
         //確認權限
