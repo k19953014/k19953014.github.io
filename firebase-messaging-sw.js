@@ -81,10 +81,11 @@ self.addEventListener("notificationclick", (event) => {
     const url = event.notification.data.url;
     const action = event.notification.data.action;
     const msg = event.notification.data.oriMessage;
+    const guid = event.notification.data.guid;
     const messageText = encodeURIComponent(msg);
 
     if (url) {
-      clients.openWindow(url+'?msg='+messageText);
+      clients.openWindow(`${url}?msg=${messageText}&guid=${guid}`);
     }
 
 
