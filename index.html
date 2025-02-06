@@ -38,12 +38,12 @@
         })
         .then(response => response.json())
         .then(result => {
-            if (result.state) {
-                // localStorage.removeItem(hmac);
-                alert(decodeURIComponent(messageText));
-            } else{
-                console.log("非法通知");
-            }
+            alert(decodeURIComponent(messageText));
+            // if (result.state) {
+            //     alert(decodeURIComponent(messageText));
+            // } else{
+            //     console.log("非法通知");
+            // }
         })
         .catch(error => console.error("Fetch error:", error));
 
