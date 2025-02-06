@@ -48,7 +48,8 @@
         // 前台處理 FCM 訊息
         messaging.onMessage((payload) => {
             console.log("收到前台通知：", payload);
-            localStorage.setItem(payload.data.guid, "1");
+            // hmac.setItem("hmac", payload.data.hmac);
+
             // // document.getElementById("messageContainer").textContent = payload.data.oriMessage;
             // // 存入 Cache Storage
             // caches.open('fcm-messages').then((cache) => {
@@ -79,14 +80,32 @@
         // });
 
         const messageText = getUrlParam('msg');
-        const guid = getUrlParam('guid');
         if (messageText) {
-            if (localStorage.getItem(guid) == "1"){
-                localStorage.removeItem(guid);
-                alert(decodeURIComponent(messageText));
-            } else{
-                alert("非法通知");
-            }
+            // var tempHMAC = localStorage.getItem("hmac");
+            var paramHMAC = getUrlParam("hmac")
+            const requestData = {
+                msg: messageText,
+                hmac: paramHMAC
+            };
+
+            fetch("http://localhost:5052/checkValidation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData) // 將 JavaScript 物件轉為 JSON 字串
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result) {
+                    // localStorage.removeItem(hmac);
+                    alert(decodeURIComponent(messageText));
+                } else{
+                    alert("非法通知");
+                }
+            })
+            .catch(error => console.error("Fetch error:", error));
+
         }
 
         function getUrlParam(name) {
