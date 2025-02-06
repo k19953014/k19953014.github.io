@@ -68,34 +68,40 @@
         };
         document.addEventListener("DOMContentLoaded", () => {
             const messageText = getUrlParam('msg');
+            
             if (messageText) {
-                var paramHMAC = getUrlParam("hmac")
-                const requestData = {
-                    Msg: messageText,
-                    Hmac: paramHMAC
-                };
 
-                fetch("http://localhost:5052/checkValidation", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(requestData) // 將 JavaScript 物件轉為 JSON 字串
-                })
-                .then(response => response.json())
-                .then(result => {
-                    // sessionStorage.setItem("msg", message);
 
-                    const dialog = document.getElementById("msgDialog");
-                    const msgContainer = document.getElementById("messageContainer");
-                    msgContainer.textContent = decodeURIComponent(messageText);
-                    dialog.showModal();
-                    // document.getElementById("openDialog").addEventListener("click", () => {
-                    //     dialog.showModal();
-                    // });
-                    document.getElementById("closeDialog").addEventListener("click", () => {
-                        dialog.close();
-                    });
+                const dialog = document.getElementById("msgDialog");
+                const msgContainer = document.getElementById("messageContainer");
+                msgContainer.textContent = decodeURIComponent(messageText);
+                dialog.showModal();
+                document.getElementById("closeDialog").addEventListener("click", () => {
+                    dialog.close();
+                });
+
+                // var paramHMAC = getUrlParam("hmac")
+                // const requestData = {
+                //     Msg: messageText,
+                //     Hmac: paramHMAC
+                // };
+
+                // fetch("http://localhost:5052/checkValidation", {
+                //     method: "POST",
+                //     headers: {
+                //         "Content-Type": "application/json"
+                //     },
+                //     body: JSON.stringify(requestData) // 將 JavaScript 物件轉為 JSON 字串
+                // })
+                // .then(response => response.json())
+                // .then(result => {
+                //     const dialog = document.getElementById("msgDialog");
+                //     const msgContainer = document.getElementById("messageContainer");
+                //     msgContainer.textContent = decodeURIComponent(messageText);
+                //     dialog.showModal();
+                //     document.getElementById("closeDialog").addEventListener("click", () => {
+                //         dialog.close();
+                //     });
 
                     // alert(decodeURIComponent(messageText));
                     // if (result.state) {
@@ -103,11 +109,9 @@
                     // } else{
                     //     console.log("非法通知");
                     // }
-                })
-                .catch(error => console.error("Fetch error:", error));
+                // })
+                // .catch(error => console.error("Fetch error:", error));
 
-            } else{
-                // message = sessionStorage.getItem("msg"); // 如果是重新開啟 PWA，取出之前的 `msg`
             }
 
         });
