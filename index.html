@@ -84,8 +84,8 @@
             // var tempHMAC = localStorage.getItem("hmac");
             var paramHMAC = getUrlParam("hmac")
             const requestData = {
-                msg: messageText,
-                hmac: paramHMAC
+                Msg: messageText,
+                Hmac: paramHMAC
             };
 
             fetch("http://localhost:5052/checkValidation", {
